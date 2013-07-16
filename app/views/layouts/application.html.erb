@@ -9,32 +9,12 @@
 </head>
 <body>
 	<%= render 'layouts/header' %>
-<!--	<div class="container-fluid">
-			<div class="row-fluid">
-				<div class="span2">
-					<%= render 'layouts/sidebar' %>
-				</div>
-				<div class="span10"> -->
 				<div class="container">
 					<% flash.each do |key, value| %>
 						<%= content_tag(:div, value, class: "alert alert-#{key}") %>
       		<% end %>
 		      <%= yield %>
 				</div>
-<!--		</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span4 center hero-unit">
-					Hey
-				</div>
-				<div class="span4 center hero-unit">
-					Sup
-				</div>
-				<div class="span4 center hero-unit">
-					Hi
-				</div>
-			</div>
-		</div> -->
 				<div class="container">
 			<%= render 'layouts/footer' %>
 			<%= debug(params) if Rails.env.development? %>
