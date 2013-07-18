@@ -13,23 +13,17 @@ class Micropost < ActiveRecord::Base
 	validates :content, presence: true, length: { maximum: 140 }
 	validates :user_id, presence: true
 
-	# Returns microposts from the users being followed by the given user
-	#def self.from_users_followed_by(user)
-	#	followed_user_ids = "SELECT followed_id FROM relationships
-	#											 WHERE follower_id = :user_id"
-	#	where("user_id IN (#{followed_user_ids}) OR user_id = :user_id",
-	#				 user_id: user.id)
-	#end
-
 	private
 
 		def self.followed_by(user)
-			followed_ids = %(SELECT followed_id FROM relationships
-											 WHERE follower_id = :user_id)
-			micropost_ids = %(SELECT micropost_id FROM recipients
-												WHERE user_id = :user_id)
-			where("id IN (#{micropost_ids}) OR user_id IN (#{followed_ids}) OR user_id",
-						user_id: user)
+			followed_ids = "SELECT followed_id FROM relationships
+											WHERE follower_id = :user_id"
+			replier_ids = "SELECT micropost_id FROM recipients
+										   WHERE user_id = :user_id"
+			where("user_id in (#{followed_ids}) 
+						 OR id in (#{replier_ids}) 
+						 OR user_id = :user_id", 
+						 user_id: user.id)
 		end
 
 		def save_recipients

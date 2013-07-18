@@ -3,7 +3,7 @@ require 'spec_helper'
 describe User do
 
 	before do 
-		@user = User.new(name: "Example User", email: "user@example.com",
+		@user = User.new(name: "Example_User", email: "user@example.com",
 										 password: "foobar", password_confirmation: "foobar") 
 	end
 
@@ -175,6 +175,15 @@ describe User do
 					should include(micropost)
 				end
 			end
+		end
+
+		describe "replies" do
+			let(:reply_post) do
+				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
+													 content: "@#{@user.name}")
+			end
+
+			its(:feed) { should include(reply_post) }
 		end
 	end
 

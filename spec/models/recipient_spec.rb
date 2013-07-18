@@ -1,5 +1,16 @@
 require 'spec_helper'
 
 describe Recipient do
-  pending "add some examples to (or delete) #{__FILE__}"
+	before do
+		@replier = FactoryGirl.create(:user)
+		@recipient = FactoryGirl.create(:user)
+		@reply = FactoryGirl.create(:micropost, user_id: @replier.id,
+																content: "@#{@recipient}")
+	end
+
+	subject { @reply }
+
+	it { should respond_to(:user_id) }
+	it { should respond_to(:content) }
+
 end
