@@ -6,11 +6,20 @@ class User < ActiveRecord::Base
 																	 class_name:  "Relationship",
 																	 dependent:		:destroy
 	has_many :followers, through: :reverse_relationships, source: :follower
+	has_many :replies, class_name: 'Recipient', dependent: :destroy
+	has_many :received_replies, through: :replies, source: "micropost"
+	
 	has_secure_password
+	
 	before_save { email.downcase! }
 	before_create :create_remember_token
-	validates :name,  presence: true, length: { maximum: 50 }
+	
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+	VALID_UNAME_REGEX = /\A[a-z](\w*[a-z0-9])*/i
+
+	validates :name,  presence: true, 
+										format: { with: VALID_UNAME_REGEX },
+										length: { maximum: 50 }
 	validates :email, presence: true, 
 										format: { with: VALID_EMAIL_REGEX },
 										uniqueness: { case_sensitive: false } 
