@@ -18,24 +18,6 @@ class Micropost < ActiveRecord::Base
 	validates :content, presence: true, length: { maximum: 140 }
 	validates :user_id, presence: true
 		
-		def people_replied
-			users = []
-			self.content.clone.gsub!( USERNAME_REGEX ).each do |username|
-				user = User.find_by_name(username[1..-1])
-				users << user if user
-			end
-			users.uniq
-		end
-
-		def person_messaged
-			users = []
-			self.content.clone.gsub!( MESSAGE_REGEX ) do |username|
-				user = User.find_by_name(username[4..-1])
-				users << user if user
-			end
-			users.uniq
-		end
-
 	private
 
 		def self.followed_by(user)
@@ -72,7 +54,7 @@ class Micropost < ActiveRecord::Base
 		def message?
 			self.content.match( MESSAGE_REGEX )
 		end
-=begin
+
 		def people_replied
 			users = []
 			self.content.clone.gsub!( USERNAME_REGEX ).each do |username|
@@ -85,10 +67,9 @@ class Micropost < ActiveRecord::Base
 		def person_messaged
 			users = []
 			self.content.clone.gsub!( MESSAGE_REGEX ) do |username|
-				user = User.find_by_name(username[1..-1])
+				user = User.find_by_name(username[4..-1])
 				users << user if user
 			end
 			users.uniq
 		end
-=end
 end
