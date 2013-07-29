@@ -1,0 +1,6 @@
+<% if @received_items && @received_items.any? %>
+	<ol class="microposts">
+		<%= render partial: 'shared/received_item', collection: @received_items %>
+	</ol>
+	<%= will_paginate @received_items %>
+<% end %>
