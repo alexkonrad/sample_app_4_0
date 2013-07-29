@@ -6,9 +6,15 @@ class User < ActiveRecord::Base
 																	 class_name:  "Relationship",
 																	 dependent:		:destroy
 	has_many :followers, through: :reverse_relationships, source: :follower
-	has_many :replies, class_name: 'Recipient', dependent: :destroy
-	has_many :received_replies, through: :replies, source: "micropost"
-	
+	has_many :replies, foreign_key: "user_id", 
+										 class_name: "Recipient",  
+										 dependent: :destroy
+	has_many :received_replies, :through => :replies, source: :micropost
+	has_many :messages, foreign_key: "user_id",
+											class_name: "Message",
+											dependent: :destroy
+	has_many :received_messages, :through => :messages, source: :micropost
+
 	has_secure_password
 	
 	before_save { email.downcase! }
