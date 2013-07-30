@@ -1,0 +1,7 @@
+%li{:id => received_item.id}
+  = link_to gravatar_for(received_item.user), received_item.user
+  %span.user
+    = link_to received_item.user.name, received_item.user
+  %span.content= received_item.content
+  %span.timestamp
+    Posted #{time_ago_in_words(received_item.created_at)} ago.
