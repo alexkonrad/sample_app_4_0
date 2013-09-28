@@ -12,6 +12,7 @@ class Micropost < ActiveRecord::Base
 
 	scope :from_users_followed_by, ->(user) { followed_by(user) }
 
+  before_save :check_protected
 	after_save :save_recipients
 	after_save :save_messages
 	default_scope -> { order('created_at DESC') }
@@ -28,19 +29,14 @@ class Micropost < ActiveRecord::Base
 						 user_id: user.id)
 		end
 		
-		#def self.message_to(user)
-		#	Micropost.joins(:messages)
-		#end
+    def check_protected
+      return unless message?
+
+      self.protected = true
+    end
 
 		def save_recipients
 			return unless reply? && !message?
-
-			#if message? 
-			#	person_messaged do |user|
-			#		Message.create!(micropost_id: self.id, user_id: user.id)
-			#		return
-			#	end
-			#end
 
 			people_replied.each do |user|
 				Recipient.create!(micropost_id: self.id, user_id: user.id)
@@ -56,7 +52,7 @@ class Micropost < ActiveRecord::Base
 		end
 
 		def reply?
-			content.match( USERNAME_REGEX )
+			self.content.match( USERNAME_REGEX )
 		end
 	
 		def message?

@@ -13,9 +13,9 @@ def make_users
                password: "amkamk",
                password_confirmation: "amkamk",
 							 admin: true)
-  99.times do |n|
-    name  = Faker::Name.name
-    email = "example-#{n+1}@railstutorial.org"
+  5.times do |n|
+    name  = Faker::Internet.user_name
+    email = Faker::Internet.email
     password  = "password"
     User.create!(name: name,
                  email: email,
@@ -25,18 +25,24 @@ def make_users
 end
 
 def make_microposts
-	users = User.all(limit: 6)
-	50.times do
-		content = Faker::Lorem.sentence(5)
-		users.each { |user| user.microposts.create!(content: content) }
+  5.times do |n|
+	  for m in 1..User.count do
+		  content = Faker::Lorem.sentence(5)
+      if ((n+m) % 5 == 0)
+        content.insert(0, "DM @#{User.where("id > ?", m % User.count).first.name} ")
+      elsif ((n+m) % 5 == 2)
+        content.insert(0, "@#{User.where("id > ?", (m+1) % User.count).first.name} ")
+      end
+		  User.find(m).microposts.create!(content: content)
+    end
 	end
 end
 
 def make_relationships
 	users = User.all
 	user  = users.first
-	followed_users = users[2..50]
-	followers			 = users[3..40]
+	followed_users = users[3..User.count]
+	followers			 = users[2..User.count]
 	followed_users.each { |followed| user.follow!(followed) }
 	followers.each			{ |follower| follower.follow!(user) }
 end

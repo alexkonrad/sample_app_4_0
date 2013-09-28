@@ -1,4 +1,4 @@
 - if @received_items && @received_items.any?
   %ol.microposts
     = render partial: 'shared/received_item', collection: @received_items
-  = will_paginate @received_items
+  = will_paginate @received_items, param_name: 'reply_page'
