@@ -12,7 +12,8 @@ def make_users
                email: "amk@amk.amk",
                password: "amkamk",
                password_confirmation: "amkamk",
-							 admin: true)
+							 admin: true,
+               notify_following: true)
   5.times do |n|
     name  = Faker::Internet.user_name
     email = Faker::Internet.email

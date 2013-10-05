@@ -12,6 +12,9 @@
       = f.password_field :password
       = f.label :password_confirmation, "Confirm Password"
       = f.password_field :password_confirmation
+      = f.check_box :notify_following
+      = f.label :notify_following, "Notify me by email when someone follows me"
+
       = f.submit "Save changes", class: "btn btn-large btn-primary"
     = gravatar_for @user
     %a{:href => "http://gravatar.com/emails"} change
