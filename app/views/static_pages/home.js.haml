@@ -1,0 +1,6 @@
+- if params[:paginate] == "received_replies"
+  $('#replies').html("= escape_javascript(render('received_replies'))");
+- if params[:paginate] == "messages"
+  $('#messages').html("= escape_javascript(render('messages'))");
+- if params[:paginate] == "feed"
+  $('#feed').html("= escape_javascript(render('feed'))");

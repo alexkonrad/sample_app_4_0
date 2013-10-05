@@ -1,0 +1,13 @@
+!!!
+%html
+  %head
+    %meta{content: 'text/html; charset=UTF-8', 'http-equiv' => 'Content-Type'}
+  %body
+    %h1
+      Welcome to RoR Tutorial Sample App, #{@user.name}
+    %p
+      You have successfully signed up to RoR Sample App.
+      Edit your profile:
+      = edit_user_url(@user)
+    %p
+      Have a great day!
