@@ -5,9 +5,10 @@ SampleApp40::Application.routes.draw do
 			get :replies, :replied_users
 		end
 	end
-	resources :sessions, 			only: [:new, :create, :destroy]
-	resources :microposts, 		only: [:create, :destroy]
-	resources :relationships, only: [:create, :destroy]
+	resources :sessions, 			  only: [:new, :create, :destroy]
+	resources :microposts, 		  only: [:create, :destroy]
+	resources :relationships,   only: [:create, :destroy]
+  resources :password_resets
 	root  'static_pages#home'
 	match '/signup',  to: 'users#new',						via: 'get'
 	match '/signin',  to: 'sessions#new',					via: 'get'

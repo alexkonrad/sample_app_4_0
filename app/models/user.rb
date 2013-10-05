@@ -17,8 +17,8 @@ class User < ActiveRecord::Base
 
 	has_secure_password
 	
-  before_save { self.notify_following = true }
 	before_save { email.downcase! }
+  before_create { self.notify_following = true }
 	before_create :create_remember_token
 	
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
@@ -55,6 +55,14 @@ class User < ActiveRecord::Base
 	def unfollow!(other_user)
 		relationships.find_by(followed_id: other_user.id).destroy
 	end
+
+  def send_password_reset
+    token = SecureRandom.urlsafe_base64.to_s
+    expiration = Time.zone.now
+    self.update_attribute(:password_reset_token, token)
+    self.update_attribute(:password_reset_sent_at, expiration)
+    UserMailer.password_reset(self).deliver
+  end
 
 	private
 

@@ -9,4 +9,5 @@
       = f.text_field :password
       = f.submit "Sign in", class: "btn btn-large btn-primary"
     %p
+      = link_to "Forgotten password?", new_password_reset_path
       New user? #{link_to "Sign up now!", signup_path}
