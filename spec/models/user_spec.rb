@@ -26,6 +26,8 @@ describe User do
 	it { should respond_to(:following?) }
 	it { should respond_to(:follow!) }
 	it { should respond_to(:unfollow!) }
+  it { should respond_to(:received_replies) }
+  it { should respond_to(:received_messages) }
 
 	it { should be_valid }
 	it { should_not be_admin }
@@ -178,12 +180,12 @@ describe User do
 		end
 
 		describe "replies" do
-			let(:reply_post) do
+			let!(:reply_post) do
 				FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
 													 content: "@#{@user.name}")
 			end
 
-			its(:feed) { should include(reply_post) }
+			its(:received_replies) { should include(reply_post) }
 		end
 	end
 

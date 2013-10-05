@@ -7,15 +7,29 @@
         = render 'shared/stats'
       %section
         = render 'shared/micropost_form'
-      %section
-        %h3 Received Replies
-        = render 'shared/received_replies'
-      %section
-        %h3 Direct Messages
-        = render 'shared/messages'
+      .accordion#accordion2
+        .accordion-group
+          .accordion-heading
+            %a.accordion-toggle{'data-toggle' => :collapse, 'data-parent' => '#accordion2', :href => '#collapseOne'}
+              %h3 Received Replies
+          .accordion-body.collapse.in#collapseOne        
+            .accordion-inner
+              %section
+                .pagination#replies
+                  = render 'shared/received_replies'
+        .accordion-group
+          .accordion-heading
+            %a.accordion-toggle{'data-toggle' => :collapse, 'data-parent' => '#accordion2', :href => '#collapseTwo'}
+              %h3 Direct Messages
+          .accordion-body.collapse#collapseTwo
+            .accordion-inner
+              %section
+                .pagination#messages
+                  = render 'shared/messages'
     .span8
-      %h3 Micropost Feed
-      = render 'shared/feed'
+      .pagination#feed
+        %h3 Micropost Feed
+        = render 'shared/feed'
 - else
   .center.hero-unit
     %h1 Welcome to the Sample App
