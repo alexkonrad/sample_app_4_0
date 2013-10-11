@@ -50,7 +50,6 @@ class UsersController < ApplicationController
 
   def activate
     @user = User.find_by(confirmation_token: params[:id])
-	  redirect_to root_url if @user.deactivated?
     if (@user.confirmation_token == params[:id])
       if @user.confirmation_sent_at < 2.days.ago
         redirect_to root_url, :alert => "Confirmation link has expired"
