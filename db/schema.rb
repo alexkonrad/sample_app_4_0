@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131005211123) do
+ActiveRecord::Schema.define(version: 20131006041305) do
 
   create_table "messages", force: true do |t|
     t.string   "user_id"
@@ -59,6 +59,9 @@ ActiveRecord::Schema.define(version: 20131005211123) do
     t.boolean  "notify_following"
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.boolean  "state"
+    t.string   "confirmation_token"
+    t.datetime "confirmation_sent_at"
   end
 
   add_index "users", ["remember_token"], name: "index_users_on_remember_token"

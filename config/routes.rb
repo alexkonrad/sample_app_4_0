@@ -3,6 +3,7 @@ SampleApp40::Application.routes.draw do
 		member do
 			get :following, :followers
 			get :replies, :replied_users
+      get :activate
 		end
 	end
 	resources :sessions, 			  only: [:new, :create, :destroy]

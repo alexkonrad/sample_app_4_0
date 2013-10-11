@@ -20,20 +20,20 @@ class UsersController < ApplicationController
 	def create
 		@user = User.new(user_params)
 		if @user.save
-      UserMailer.welcome_email(@user).deliver
-			sign_in @user
-			flash[:success] = "Welcome to the Sample App!"
-			redirect_to @user	
+      @user.send_confirmation
+			#sign_in @user
+		  redirect_to root_url, notice: "Please check your email inbox for a confirmation email."
+      #redirect_to @user	
 		else
 			render 'new'
 		end
 	end
 
-	def edit
+  def edit
 	end
 
 	def update
-		if @user.update_attributes(user_params)
+    if @user.update_attributes(user_params)
 			flash[:success] = "Profile updated"
 			sign_in @user
 			redirect_to @user
@@ -47,6 +47,20 @@ class UsersController < ApplicationController
 		flash[:success] = "User destroyed."
 		redirect_to users_url
 	end
+
+  def activate
+    @user = User.find_by(confirmation_token: params[:id])
+	  redirect_to root_url if @user.deactivated?
+    if (@user.confirmation_token == params[:id])
+      if @user.confirmation_sent_at < 2.days.ago
+        redirect_to root_url, :alert => "Confirmation link has expired"
+      else 
+        @user.update_attribute(:state, true)
+        sign_in @user
+        redirect_to root_url, :notice => "Your account has been activated!"
+      end
+    end
+  end
 
 	def following
 		@title = "Following"

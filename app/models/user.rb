@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
 	before_save { email.downcase! }
   before_create { self.notify_following = true }
 	before_create :create_remember_token
+  before_create :create_confirmation_token
 	
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 	VALID_UNAME_REGEX = /\A[a-z](\w*[a-z0-9])*/i
@@ -31,6 +32,22 @@ class User < ActiveRecord::Base
 										format: { with: VALID_EMAIL_REGEX },
 										uniqueness: { case_sensitive: false } 
 	validates :password, length: { minimum: 6 }
+
+  def deactivated? 
+    return !self.state
+  end
+
+  def activated? 
+    return self.state
+  end
+  
+  def activate
+    self.update_attribute(:state, true)
+  end
+  
+  def deactivate 
+    self.update_attribute(:state, false)
+  end
 
 	def User.new_remember_token
 		SecureRandom.urlsafe_base64
@@ -56,11 +73,19 @@ class User < ActiveRecord::Base
 		relationships.find_by(followed_id: other_user.id).destroy
 	end
 
+  def send_confirmation
+    #token = SecureRandom.urlsafe_base64.to_s
+    #time  = Time.zone.now
+    #self.update_attribute(:confirmation_token, token)
+    #self.update_attribute(:confirmation_sent_at, time)
+    UserMailer.confirmation(self).deliver
+  end
+
   def send_password_reset
     token = SecureRandom.urlsafe_base64.to_s
-    expiration = Time.zone.now
+    time  = Time.zone.now
     self.update_attribute(:password_reset_token, token)
-    self.update_attribute(:password_reset_sent_at, expiration)
+    self.update_attribute(:password_reset_sent_at, time)
     UserMailer.password_reset(self).deliver
   end
 
@@ -69,4 +94,9 @@ class User < ActiveRecord::Base
 		def create_remember_token
 			self.remember_token = User.encrypt(User.new_remember_token)
 		end
+
+    def create_confirmation_token
+      self.confirmation_token   = SecureRandom.urlsafe_base64.to_s 
+      self.confirmation_sent_at = Time.zone.now
+    end
 end
